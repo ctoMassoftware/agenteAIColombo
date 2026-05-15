@@ -1,0 +1,33 @@
+services:
+  # Nuestro Monolito Modular Express
+  api-core:
+    build: 
+      context: ./api-core
+      dockerfile: Dockerfile
+    ports:
+      - "4000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - GEMINI_API_KEY=tu_api_key_real_de_google_aqui
+      - JWT_SECRET=ColomboSuperSecret2026
+      # -- NUEVAS VARIABLES DE BASE DE DATOS --
+      - DB_USER=colombo_admin
+      - DB_HOST=postgres-db
+      - DB_NAME=colombo_ai_db
+      - DB_PASSWORD=colombo_secret
+      - DB_PORT=5432
+    volumes:
+      - ./api-core/src:/app/src
+    depends_on:
+      - postgres-db
+
+  # Nuestra Base de Datos pura
+  postgres-db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=colombo_admin
+      - POSTGRES_PASSWORD=colombo_secret
+      - POSTGRES_DB=colombo_ai_db
